@@ -33,4 +33,6 @@ permissions and limitations under the License.
     <string name="subscription_expired">Your subscription expired!</string>
     <string name="ok">@android:string/ok</string>
     <string name="settings_start_fragment_tag">"Show settings item"</string>
+    <string name="broadcasters_title">Broadcasters</string>
+    <string name="philosophie_title">Philosophie</string>
 </resources>

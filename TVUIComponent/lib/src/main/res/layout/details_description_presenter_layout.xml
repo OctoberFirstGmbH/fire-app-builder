@@ -38,6 +38,13 @@ permissions and limitations under the License.
         >
 
     <android.support.v17.leanback.widget.ResizingTextView
+        android:id="@+id/details_description_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/detailsDescriptionTitleStyle"
+        />
+
+    <android.support.v17.leanback.widget.ResizingTextView
             android:id="@+id/details_description_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,5 +66,29 @@ permissions and limitations under the License.
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!--<ImageView-->
+            <!--android:id="@+id/details_broadcaster_image"-->
+            <!--android:layout_width="38dp"-->
+            <!--android:layout_height="38dp"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--/>-->
+        <TextView
+            android:id="@+id/details_video_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/details_credits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/details_description_subtitle_bottom_margin"
+        style="?attr/detailsDescriptionSubtitleStyle"
+        />
 
 </LinearLayout>

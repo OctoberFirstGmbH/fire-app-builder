@@ -18,7 +18,7 @@ permissions and limitations under the License.
     <!-- App colors -->
 
     <!-- The background color of the screens. -->
-    <color name="background">#22282E</color>
+    <color name="background">#000000</color>
     <!-- Used for card background -->
     <color name="card_background">#2B2B2B</color>
     <!-- Background color of the progress bar -->
@@ -30,23 +30,25 @@ permissions and limitations under the License.
     <!-- Color of splash screen spinning loader animation -->
     <color name="spinner_color">#FFFFFFFF</color>
     <!-- The color of button highlights and widgets. -->
-    <color name="accent">#EE962D</color>
+    <color name="accent">#FFE9E9C9</color>
     <!-- FullContentBrowser:
          The header's bar color (left-hand navigation bar). -->
     <color name="browse_headers_bar">#0DFFFFFF</color>
     <!-- Used for the text of a selected item's title and description.
          Also used for button text, Splash screen text, and read more dialog text. -->
-    <color name="primary_text">#E6FFFFFF</color>
+    <color name="primary_text">#FFE9E9C9</color>
     <!-- Used for the text on the card views and playback progress bar text. -->
-    <color name="secondary_text">#FFFFFFFF</color>
+    <color name="secondary_text">#FFE9E9C9</color>
     <!-- Used for the category titles and content subtitles -->
-    <color name="tertiary_text">#99FFFFFF</color>
+    <color name="tertiary_text">#FFE9E9C9</color>
     <!-- End of App Colors -->
 
     <!-- App Configurations -->
 
     <!-- Terms of use file -->
     <string translatable="false" name="terms_of_use_file">terms_of_use.html</string>
+    <string translatable="false" name="broadcasters_file">broadcasters.html</string>
+    <string translatable="false" name="philosophie_file">philosophie.html</string>
     <!-- Content reload time in milliseconds -->
     <integer name="time_to_reload_content">14400000</integer>
     <!-- Is in-app purchase disabled? -->
@@ -57,16 +59,16 @@ permissions and limitations under the License.
     <!-- Splash Screen Customization -->
 
     <!-- Company logo to show on Splash Screen -->
-    <drawable name="splash_logo">@drawable/fire_app_builder_white</drawable>
+    <drawable name="splash_logo">@drawable/app_icon_large</drawable>
 
     <!-- End of Splash Screen Customization -->
 
     <!-- Browse Customization -->
 
     <!-- Company logo -->
-    <drawable name="company_logo">@drawable/fire_app_builder_white_2</drawable>
+    <drawable name="company_logo">@drawable/featvre_logo_claim</drawable>
     <!-- App icon -->
-    <drawable name="app_logo">@mipmap/ic_launcher</drawable>
+    <drawable name="app_logo">@mipmap/app_icon</drawable>
     <!-- Content preview window customization -->
     <dimen name="content_image_height">350dp</dimen>
     <dimen name="content_image_width">540dp</dimen>

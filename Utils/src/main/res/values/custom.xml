@@ -31,6 +31,8 @@ permissions and limitations under the License.
     <drawable name="company_logo">@drawable/logo</drawable>
     <!-- terms of use file -->
     <string name="terms_of_use_file">terms_of_use.html</string>
+    <string name="broadcasters_file">broadcasters.html</string>
+    <string name="philosophie_file">philosophie.html</string>
     <!-- A default light device font used for body text -->
     <string name="default_light_font">Roboto Light</string>
     <!-- A default bold device font used for titles -->

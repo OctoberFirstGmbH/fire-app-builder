@@ -14,6 +14,12 @@
  */
 package com.amazon.android.contentbrowser;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+
 import com.amazon.android.contentbrowser.database.ContentDatabaseHelper;
 import com.amazon.android.contentbrowser.database.RecentRecord;
 import com.amazon.android.contentbrowser.helper.AnalyticsHelper;
@@ -36,8 +42,10 @@ import com.amazon.android.search.ISearchAlgo;
 import com.amazon.android.search.ISearchResult;
 import com.amazon.android.search.SearchManager;
 import com.amazon.android.ui.fragments.AlertDialogFragment;
+import com.amazon.android.ui.fragments.BroadcastersSettingsFragment;
 import com.amazon.android.ui.fragments.LogoutSettingsFragment;
 import com.amazon.android.ui.fragments.NoticeSettingsFragment;
+import com.amazon.android.ui.fragments.PhilosophieSettingsFragment;
 import com.amazon.android.ui.fragments.SlideShowSettingFragment;
 import com.amazon.android.utils.ErrorUtils;
 import com.amazon.android.utils.Preferences;
@@ -45,12 +53,6 @@ import com.amazon.utils.DateAndTimeHelper;
 import com.amazon.utils.StringManipulation;
 
 import org.greenrobot.eventbus.EventBus;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,8 +66,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.amazon.android.contentbrowser.helper.LauncherIntegrationManager
-        .getSourceOfContentPlayRequest;
+import static com.amazon.android.contentbrowser.helper.LauncherIntegrationManager.getSourceOfContentPlayRequest;
 
 /**
  * This class is the controller of the content browsing solution.
@@ -166,6 +167,8 @@ public class ContentBrowser implements IContentBrowser, ICancellableLoad {
      * Terms constant.
      */
     public static final String TERMS = "Terms";
+    public static final String BROADCASTERS = "Broadcasters";
+    public static final String PHILOSOPHIE = "Philosophie";
 
     /**
      * Slide show setting constant.
@@ -515,6 +518,8 @@ public class ContentBrowser implements IContentBrowser, ICancellableLoad {
         addWidgetsAction(createSearchAction());
         //addWidgetsAction(createSlideShowAction());
         addSettingsAction(createTermsOfUseSettingsAction());
+        addSettingsAction(createBroadcastersSettingsAction());
+        addSettingsAction(createPhilosophieSettingsAction());
         //addSettingsAction(createSlideShowSettingAction());
         setupLogoutAction();
 
@@ -815,6 +820,26 @@ public class ContentBrowser implements IContentBrowser, ICancellableLoad {
     }
 
     /**
+     * Get the path for the bold italic font.
+     *
+     * @return Bold italic font path.
+     */
+    public String getBoldItalicFontPath() {
+
+        return mNavigator.getNavigatorModel().getBranding().boldItalic;
+    }
+
+    /**
+     * Get the path for the bold small caps font.
+     *
+     * @return Bold small caps font path.
+     */
+    public String getBoldSmallCapsFontPath() {
+
+        return mNavigator.getNavigatorModel().getBranding().boldSmallCaps;
+    }
+
+    /**
      * Get the path for the regular font.
      *
      * @return Regular font path.
@@ -908,6 +933,18 @@ public class ContentBrowser implements IContentBrowser, ICancellableLoad {
         // Create the Terms of Use settings action.
         return new Action().setAction(TERMS).setIconResourceId(R.drawable.ic_terms_text)
                            .setLabel1(mAppContext.getString(R.string.terms_title));
+    }
+
+    private Action createBroadcastersSettingsAction() {
+        // Create the Terms of Use settings action.
+        return new Action().setAction(BROADCASTERS).setIconResourceId(R.drawable.ic_terms_text)
+                .setLabel1(mAppContext.getString(R.string.broadcasters_title));
+    }
+
+    private Action createPhilosophieSettingsAction() {
+        // Create the Terms of Use settings action.
+        return new Action().setAction(PHILOSOPHIE).setIconResourceId(R.drawable.ic_terms_text)
+                .setLabel1(mAppContext.getString(R.string.philosophie_title));
     }
 
     /**
@@ -1108,6 +1145,18 @@ public class ContentBrowser implements IContentBrowser, ICancellableLoad {
                         .createFragment(activity,
                                         activity.getFragmentManager(),
                                         settingsAction);
+                break;
+            case BROADCASTERS:
+                new BroadcastersSettingsFragment()
+                        .createFragment(activity,
+                                activity.getFragmentManager(),
+                                settingsAction);
+                break;
+            case PHILOSOPHIE:
+                new PhilosophieSettingsFragment()
+                        .createFragment(activity,
+                                activity.getFragmentManager(),
+                                settingsAction);
                 break;
             case SLIDESHOW_SETTING:
                 slideShowSettingActionTriggered(activity, settingsAction);

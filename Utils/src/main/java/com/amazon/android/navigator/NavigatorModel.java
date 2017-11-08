@@ -125,6 +125,10 @@ public class NavigatorModel {
          * A regular font used for buttons and subtitles.
          */
         public String regularFont;
+
+        public String boldItalic;
+
+        public String boldSmallCaps;
     }
 
     /**

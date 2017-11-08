@@ -14,22 +14,30 @@
  */
 package com.amazon.android.tv.tenfoot.presenter;
 
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v17.leanback.widget.Presenter;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.amazon.android.configuration.ConfigurationManager;
 import com.amazon.android.model.content.Content;
+import com.amazon.android.tv.tenfoot.R;
 import com.amazon.android.tv.tenfoot.base.TenFootApp;
 import com.amazon.android.tv.tenfoot.utils.ContentHelper;
 import com.amazon.android.ui.constants.ConfigurationConstants;
 import com.amazon.android.ui.widget.EllipsizedTextView;
-import com.amazon.android.tv.tenfoot.R;
-
-import android.content.Context;
-import android.support.v17.leanback.widget.Presenter;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import com.amazon.android.utils.GlideHelper;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
@@ -48,16 +56,39 @@ public class DetailsDescriptionPresenter extends Presenter {
      */
     public static class ViewHolder extends Presenter.ViewHolder {
 
+        private final TextView mCategory;
         private final TextView mTitle;
         private final TextView mSubtitle;
         private final TextView mBody;
+        //private final ImageView mBroadcasterImage;
+        private final TextView mVideoLength;
+        private final TextView mCredits;
 
         public ViewHolder(final View view) {
 
             super(view);
+            mCategory = (TextView) view.findViewById(R.id.details_description_category);
             mTitle = (TextView) view.findViewById(R.id.details_description_title);
             mSubtitle = (TextView) view.findViewById(R.id.details_description_subtitle);
             mBody = (EllipsizedTextView) view.findViewById(R.id.ellipsized_description_text);
+            //mBroadcasterImage = (ImageView) view.findViewById(R.id.details_broadcaster_image);
+            mVideoLength = (TextView) view.findViewById(R.id.details_video_length);
+            mCredits = (TextView) view.findViewById(R.id.details_credits);
+        }
+
+//        public ImageView getBroadcasterImage() {
+//
+//            return mBroadcasterImage;
+//        }
+
+        public TextView getVideoLengthText() {
+
+            return mVideoLength;
+        }
+
+        public TextView getCategory() {
+
+            return mCategory;
         }
 
         public TextView getTitle() {
@@ -74,6 +105,12 @@ public class DetailsDescriptionPresenter extends Presenter {
 
             return mBody;
         }
+
+        public TextView getCredits() {
+
+            return mCredits;
+        }
+
     }
 
     /**
@@ -126,6 +163,15 @@ public class DetailsDescriptionPresenter extends Presenter {
 
         ConfigurationManager config = ConfigurationManager.getInstance(TenFootApp.getInstance());
 
+        // category
+        viewHolder.getCategory().setEllipsize(TextUtils.TruncateAt.END);
+        viewHolder.getCategory().setSingleLine();
+        viewHolder.getCategory().setText(content.getCategory());
+        CalligraphyUtils.applyFontToTextView(TenFootApp.getInstance(), viewHolder.getCategory(),
+                config.getTypefacePath(ConfigurationConstants.BOLD_ITALIC_FONT));
+        viewHolder.getCategory().setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+        // title
         viewHolder.getTitle().setEllipsize(TextUtils.TruncateAt.END);
         viewHolder.getTitle().setSingleLine();
         viewHolder.getTitle().setText(content.getTitle());
@@ -135,11 +181,39 @@ public class DetailsDescriptionPresenter extends Presenter {
 
         viewHolder.getSubtitle().setText(ContentHelper.getDescriptiveSubtitle(mContext, content));
 
-        viewHolder.getBody().setText(content.getDescription().trim());
+        if(content.getReview().trim().length() <= 0) {
+            viewHolder.getBody().setText(content.getDescription().trim());
+        } else {
+            viewHolder.getBody().setText(content.getReview().trim() + "\n\n" + content.getDescription().trim());
+        }
+
         CalligraphyUtils.applyFontToTextView(TenFootApp.getInstance(), viewHolder.getBody(),
                                              config.getTypefacePath(ConfigurationConstants
                                                                             .LIGHT_FONT));
+        //updateBroadcasterImage(viewHolder.getBroadcasterImage(), content.getBroadcasterLogo());
 
+        if(content.getDuration() > 0) {
+            viewHolder.getVideoLengthText().setText(content.getBroadcaster() + " | " + content.getDuration() + " min");
+        }
+
+        viewHolder.getCredits().setText("Bild:© " + content.getImageCredits());
+    }
+
+    private void updateBroadcasterImage(final ImageView broadcasterImageView, final String broadcasterLogoUrl) {
+        GlideHelper.loadImageIntoView(
+                broadcasterImageView, mContext, broadcasterLogoUrl, new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        broadcasterImageView.setImageDrawable(resource);
+                        return false;
+                    }
+                }, android.R.color.transparent,
+                new ColorDrawable(ContextCompat.getColor(mContext, android.R.color.transparent)));
     }
 
     /**
@@ -170,5 +244,4 @@ public class DetailsDescriptionPresenter extends Presenter {
         Log.v(TAG, "onViewDetachedFromWindow called.");
         super.onViewDetachedFromWindow(holder);
     }
-
 }

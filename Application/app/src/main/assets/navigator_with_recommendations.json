@@ -10,7 +10,9 @@
     "globalTheme": "AppTheme",
     "lightFont": "Roboto Light",
     "boldFont": "Roboto Bold",
-    "regularFont": "Roboto Regular"
+    "regularFont": "Roboto Regular",
+    "boldItalic" : "Roboto Bold",
+    "boldSmallCaps" : "Roboto Bold"
   },
   "globalRecipes": [
     {

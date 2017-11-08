@@ -33,4 +33,6 @@ permissions and limitations under the License.
     <string name="subscription_expired">Ihre Abonnement ist abgelaufen!</string>
     <string name="ok">@android:string/ok</string>
     <string name="settings_start_fragment_tag">Element „Einstellungen anzeigen“</string>
+    <string name="broadcasters_title">Mediatheken</string>
+    <string name="philosophie_title">Philosophie</string>
 </resources>

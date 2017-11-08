@@ -1,5 +1,11 @@
 {
   "urls": [
-    "http://www.lightcast.com/api/firetv/channels.php?app_id=249&app_key=gtn89uj3dsw&action=channels_videos"
+    "https://mono.featvre.com/tv/program/top5",
+    "https://mono.featvre.com/tv/program/feed?size=40",
+    "https://mono.featvre.com/tv/program/popular?size=40",
+    "https://mono.featvre.com/tv/program/favourites/Aktuell",
+    "https://mono.featvre.com/tv/program/favourites/Politik",
+    "https://mono.featvre.com/tv/program/favourites/Kultur",
+    "https://mono.featvre.com/tv/program/favourites/Wissen"
   ]
 }

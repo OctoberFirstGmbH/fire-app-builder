@@ -29,15 +29,6 @@
 package com.amazon.android.tv.tenfoot.ui.activities;
 
 
-import com.amazon.android.configuration.ConfigurationManager;
-import com.amazon.android.contentbrowser.ContentBrowser;
-import com.amazon.android.contentbrowser.helper.FontManager;
-import com.amazon.android.interfaces.ICancellableLoad;
-import com.amazon.android.ui.constants.ConfigurationConstants;
-import com.amazon.android.utils.Helpers;
-import com.amazon.android.tv.tenfoot.R;
-import com.amazon.android.tv.tenfoot.base.BaseActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -49,6 +40,15 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.amazon.android.configuration.ConfigurationManager;
+import com.amazon.android.contentbrowser.ContentBrowser;
+import com.amazon.android.contentbrowser.helper.FontManager;
+import com.amazon.android.interfaces.ICancellableLoad;
+import com.amazon.android.tv.tenfoot.R;
+import com.amazon.android.tv.tenfoot.base.BaseActivity;
+import com.amazon.android.ui.constants.ConfigurationConstants;
+import com.amazon.android.utils.Helpers;
 
 import java.util.Map;
 
@@ -166,6 +166,14 @@ public class SplashActivity extends BaseActivity implements ICancellableLoad {
         configureFontPath(ConfigurationConstants.BOLD_FONT,
                           contentBrowser.getBoldFontPath(),
                           getResources().getString(R.string.default_bold_font));
+
+        configureFontPath(ConfigurationConstants.BOLD_ITALIC_FONT,
+                contentBrowser.getBoldItalicFontPath(),
+                getResources().getString(R.string.default_bold_font));
+
+        configureFontPath(ConfigurationConstants.BOLD_SMALL_CAPS_FONT,
+                contentBrowser.getBoldSmallCapsFontPath(),
+                getResources().getString(R.string.default_bold_font));
 
         String regularFontPath =
                 configureFontPath(ConfigurationConstants.REGULAR_FONT,

@@ -30,33 +30,6 @@
 
 package com.amazon.android.uamp.ui;
 
-import com.google.android.exoplayer.text.SubtitleLayout;
-
-import com.amazon.ads.IAds;
-import com.amazon.ads.AdMetaData;
-import com.amazon.analytics.AnalyticsTags;
-import com.amazon.android.contentbrowser.ContentBrowser;
-import com.amazon.android.contentbrowser.database.ContentDatabaseHelper;
-import com.amazon.android.contentbrowser.database.RecentRecord;
-import com.amazon.android.contentbrowser.helper.AnalyticsHelper;
-import com.amazon.android.model.content.Content;
-import com.amazon.android.module.ModuleManager;
-
-import com.amazon.android.recipe.Recipe;
-import com.amazon.android.tv.tenfoot.R;
-import com.amazon.android.uamp.DrmProvider;
-import com.amazon.android.uamp.UAMP;
-import com.amazon.android.uamp.constants.PreferencesConstants;
-import com.amazon.android.ui.fragments.ErrorDialogFragment;
-import com.amazon.android.utils.ErrorUtils;
-import com.amazon.android.utils.Helpers;
-import com.amazon.android.utils.Preferences;
-import com.amazon.mediaplayer.AMZNMediaPlayer;
-import com.amazon.mediaplayer.AMZNMediaPlayer.PlayerState;
-import com.amazon.mediaplayer.playback.text.Cue;
-import com.amazon.mediaplayer.tracks.TrackType;
-import com.amazon.utils.DateAndTimeHelper;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -76,6 +49,31 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+
+import com.amazon.ads.AdMetaData;
+import com.amazon.ads.IAds;
+import com.amazon.analytics.AnalyticsTags;
+import com.amazon.android.contentbrowser.ContentBrowser;
+import com.amazon.android.contentbrowser.database.ContentDatabaseHelper;
+import com.amazon.android.contentbrowser.database.RecentRecord;
+import com.amazon.android.contentbrowser.helper.AnalyticsHelper;
+import com.amazon.android.model.content.Content;
+import com.amazon.android.module.ModuleManager;
+import com.amazon.android.recipe.Recipe;
+import com.amazon.android.tv.tenfoot.R;
+import com.amazon.android.uamp.DrmProvider;
+import com.amazon.android.uamp.UAMP;
+import com.amazon.android.uamp.constants.PreferencesConstants;
+import com.amazon.android.ui.fragments.ErrorDialogFragment;
+import com.amazon.android.utils.ErrorUtils;
+import com.amazon.android.utils.Helpers;
+import com.amazon.android.utils.Preferences;
+import com.amazon.mediaplayer.AMZNMediaPlayer;
+import com.amazon.mediaplayer.AMZNMediaPlayer.PlayerState;
+import com.amazon.mediaplayer.playback.text.Cue;
+import com.amazon.mediaplayer.tracks.TrackType;
+import com.amazon.utils.DateAndTimeHelper;
+import com.google.android.exoplayer.text.SubtitleLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1231,7 +1229,9 @@ public class PlaybackActivity extends Activity implements
     private void openContentHelper(Content content) {
 
         if (mPlayer != null && mPlayer.getPlayerState() == PlayerState.IDLE) {
+
             String url = content.getUrl();
+
             if (TextUtils.isEmpty(url)) {
                 AnalyticsHelper.trackError(TAG, "Content URL is either null or empty for content " +
                         content.toString());

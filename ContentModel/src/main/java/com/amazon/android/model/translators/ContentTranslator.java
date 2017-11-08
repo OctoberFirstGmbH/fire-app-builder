@@ -14,13 +14,12 @@
  */
 package com.amazon.android.model.translators;
 
-import com.amazon.android.model.content.Content;
-import com.amazon.android.model.AModelTranslator;
-import com.amazon.utils.ListUtils;
-
-import org.json.JSONException;
-
 import android.util.Log;
+
+import com.amazon.android.model.AModelTranslator;
+import com.amazon.android.model.content.Content;
+import com.amazon.android.model.content.constants.PlayMode;
+import com.amazon.utils.ListUtils;
 
 import java.util.List;
 
@@ -80,8 +79,17 @@ public class ContentTranslator extends AModelTranslator<Content> {
                 case Content.SUBTITLE_FIELD_NAME:
                     model.setSubtitle(value.toString());
                     break;
+                case Content.CATEGORY_FIELD_NAME:
+                    model.setCategory(value.toString());
+                    break;
+                case Content.REVIEW_FIELD_NAME:
+                    model.setReview(value.toString());
+                    break;
                 case Content.URL_FIELD_NAME:
                     model.setUrl(value.toString());
+                    break;
+                case Content.DEEP_LINK_URL_FIELD_NAME:
+                    model.setDeepLinkUrl(value.toString());
                     break;
                 case Content.CARD_IMAGE_URL_FIELD_NAME:
                     model.setCardImageUrl(value.toString());
@@ -110,7 +118,11 @@ public class ContentTranslator extends AModelTranslator<Content> {
                     model.setChannelId(value.toString());
                     break;
                 case Content.DURATION_FIELD_NAME:
-                    model.setDuration(Long.valueOf((String) value));
+                    try {
+                        model.setDuration(Long.valueOf((String) value));
+                    } catch (ClassCastException e) {
+                        model.setDuration(((Integer)value).longValue());
+                    }
                     break;
                 case Content.AD_CUE_POINTS_FIELD_NAME:
                     model.setAdCuePoints((List) value);
@@ -120,6 +132,18 @@ public class ContentTranslator extends AModelTranslator<Content> {
                     break;
                 case Content.FORMAT_FIELD_NAME:
                     model.setFormat(value.toString());
+                    break;
+                case Content.BROADCASTER_LOGO_FIELD_NAME:
+                    model.setBroadcasterLogo(value.toString());
+                    break;
+                case Content.BROADCASTER_FIELD_NAME:
+                    model.setBroadcaster(value.toString());
+                    break;
+                case Content.IMAGE_CREDITS_FIELD_NAME:
+                    model.setImageCredits(value.toString());
+                    break;
+                case Content.PLAY_MODE_FIELD_NAME:
+                    model.setPlayMode(PlayMode.valueOf(value.toString()));
                     break;
                 default:
                     model.setExtraValue(field, value);

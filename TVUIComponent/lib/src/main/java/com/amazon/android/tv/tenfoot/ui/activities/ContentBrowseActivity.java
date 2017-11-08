@@ -29,19 +29,6 @@
 
 package com.amazon.android.tv.tenfoot.ui.activities;
 
-import com.amazon.android.configuration.ConfigurationManager;
-import com.amazon.android.contentbrowser.ContentBrowser;
-import com.amazon.android.model.Action;
-import com.amazon.android.model.content.Content;
-import com.amazon.android.ui.constants.ConfigurationConstants;
-import com.amazon.android.ui.fragments.LogoutSettingsFragment;
-import com.amazon.android.utils.GlideHelper;
-import com.amazon.android.ui.utils.BackgroundImageUtils;
-import com.amazon.android.utils.Helpers;
-import com.amazon.android.tv.tenfoot.R;
-import com.amazon.android.tv.tenfoot.base.BaseActivity;
-import com.amazon.android.tv.tenfoot.ui.fragments.ContentBrowseFragment;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -54,6 +41,19 @@ import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.amazon.android.configuration.ConfigurationManager;
+import com.amazon.android.contentbrowser.ContentBrowser;
+import com.amazon.android.model.Action;
+import com.amazon.android.model.content.Content;
+import com.amazon.android.tv.tenfoot.R;
+import com.amazon.android.tv.tenfoot.base.BaseActivity;
+import com.amazon.android.tv.tenfoot.ui.fragments.ContentBrowseFragment;
+import com.amazon.android.ui.constants.ConfigurationConstants;
+import com.amazon.android.ui.fragments.LogoutSettingsFragment;
+import com.amazon.android.ui.utils.BackgroundImageUtils;
+import com.amazon.android.utils.GlideHelper;
+import com.amazon.android.utils.Helpers;
 
 import java.util.concurrent.TimeUnit;
 
@@ -147,6 +147,14 @@ public class ContentBrowseActivity extends BaseActivity implements ContentBrowse
                 callImageLoadSubscription(getString(R.string.terms_title),
                                           getString(R.string.terms_description),
                                           null);
+            } else if (ContentBrowser.BROADCASTERS.equals(settingsAction.getAction())) {
+                callImageLoadSubscription(getString(R.string.broadcasters_title),
+                        getString(R.string.broadcasters_description),
+                        null);
+            } else if (ContentBrowser.PHILOSOPHIE.equals(settingsAction.getAction())) {
+                callImageLoadSubscription(getString(R.string.philosophie_title),
+                        getString(R.string.philosophie_description),
+                        null);
             }
             // Login and logout action.
             else if (ContentBrowser.LOGIN_LOGOUT.equals(settingsAction.getAction())) {

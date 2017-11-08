@@ -7,28 +7,74 @@
   },
   "branding": {
     "globalTheme": "AppTheme",
-    "lightFont" : "Roboto Light",
-    "boldFont" : "Roboto Bold",
-    "regularFont" : "Roboto Regular"
+    "lightFont" : "fonts/AutoPro-Regular.ttf",
+    "boldFont" : "fonts/AutoPro-Bold.ttf",
+    "regularFont" : "fonts/AutoPro-RegularItalic1.ttf",
+    "boldItalic" : "fonts/AutoPro-BoldItalic2.ttf",
+    "boldSmallCaps" : "fonts/AutoPro-BoldSmallCaps.ttf"
   },
   "globalRecipes": [
     {
-      "categories": {
-        "dataLoader": "recipes/LightCastDataLoaderRecipe1.json",
-        "dynamicParser": "recipes/LightCastCategoriesRecipe.json"
+      "categories" : {
+        "name" : "Unsere Empfehlungen"
       },
       "contents": {
-        "dataLoader": "recipes/LightCastDataLoaderRecipe1.json",
-        "dynamicParser": "recipes/LightCastContentsRecipe.json"
+        "dataLoader": "recipes/FeatvreDataLoaderRecipe0.json",
+        "dynamicParser": "recipes/FeatvreContentsRecipe.json"
       }
     },
     {
-      "categories": {
-        "name": "Hardcoded Category Name"
+      "categories" : {
+        "name" : "Neu bei Featvre"
       },
       "contents": {
-        "dataLoader": "recipes/LightCastDataLoaderRecipe1.json",
-        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+        "dataLoader": "recipes/FeatvreDataLoaderRecipe1.json",
+        "dynamicParser": "recipes/FeatvreContentsRecipe.json"
+      }
+    },
+    {
+      "categories" : {
+        "name" : "Beliebteste Beiträge"
+      },
+      "contents": {
+        "dataLoader": "recipes/FeatvreDataLoaderRecipe2.json",
+        "dynamicParser": "recipes/FeatvreContentsRecipe.json"
+      }
+    },
+    {
+      "categories" : {
+        "name" : "Aktuell"
+      },
+      "contents": {
+        "dataLoader": "recipes/FeatvreDataLoaderRecipe3.json",
+        "dynamicParser": "recipes/FeatvreContentsRecipe.json"
+      }
+    },
+    {
+      "categories" : {
+        "name" : "Politik"
+      },
+      "contents": {
+        "dataLoader": "recipes/FeatvreDataLoaderRecipe4.json",
+        "dynamicParser": "recipes/FeatvreContentsRecipe.json"
+      }
+    },
+    {
+      "categories" : {
+        "name" : "Kultur"
+      },
+      "contents": {
+        "dataLoader": "recipes/FeatvreDataLoaderRecipe5.json",
+        "dynamicParser": "recipes/FeatvreContentsRecipe.json"
+      }
+    },
+    {
+      "categories" : {
+        "name" : "Wissen"
+      },
+      "contents": {
+        "dataLoader": "recipes/FeatvreDataLoaderRecipe6.json",
+        "dynamicParser": "recipes/FeatvreContentsRecipe.json"
       }
     }
   ],

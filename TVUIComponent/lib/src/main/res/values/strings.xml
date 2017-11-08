@@ -63,4 +63,6 @@ permissions and limitations under the License.
 
     <string name="season">Season</string>
     <string name="episode">Episode</string>
+    <string name="broadcasters_description">Das Geheimnis eines großartigen Angebots sind großartige Quellen!</string>
+    <string name="philosophie_description">Unsere Philosophie bei FEATVRE</string>
 </resources>

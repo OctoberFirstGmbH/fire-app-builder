@@ -30,7 +30,8 @@ permissions and limitations under the License.
   <string name="logout_label">Abmelden</string>
   <string name="slideshow_label">Einstellung der Bildschirmpräsentation</string>
   <string name="auto_play_speed">Präsentationsgeschwindigkeit</string>
-  <string name="terms_title">Nutzungsbedingungen</string>
+  <!--<string name="terms_title">Nutzungsbedingungen</string>-->
+  <string name="terms_title">Impressum</string>
   <string name="terms_description">Rechtliche Hinweise ansehen.</string>
   <string name="slideshow_title">Geschwindigkeit der Bildschirmpräsentation</string>
   <string name="slideshow_description">Geschwindigkeit der Bildschirmpräsentation einstellen.</string>

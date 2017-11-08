@@ -14,13 +14,14 @@
  */
 package com.amazon.android.model.content;
 
+import android.content.Intent;
+import android.util.Log;
+
+import com.amazon.android.model.content.constants.PlayMode;
 import com.amazon.utils.ListUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import android.content.Intent;
-import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class Content implements Serializable {
      */
     private static final String TAG = Content.class.getSimpleName();
 
+
     /**
      * Id of of the content.
      */
@@ -61,14 +63,34 @@ public class Content implements Serializable {
     private String mSubtitle;
 
     /**
+     * Category of the content.
+     */
+    private String mCategory;
+
+    /**
      * Url of the content.
      */
     private String mUrl;
 
     /**
+     * Broadcaster logo of the content.
+     */
+    private String mBroadcasterLogo;
+
+    /**
+     * Broadcaster of the content.
+     */
+    private String mBroadcaster;
+
+    /**
      * Description of the content.
      */
     private String mDescription;
+
+    /**
+     * Review of the content.
+     */
+    private String mReview;
 
     /**
      * Url for the card image of the content.
@@ -79,6 +101,11 @@ public class Content implements Serializable {
      * Url for the background image of the content.
      */
     private String mBackgroundImageUrl;
+
+    /**
+     * Image credits of the content image.
+     */
+    private String mImageCredits;
 
     /**
      * Flag to detect if a subscription is required for this content.
@@ -132,6 +159,16 @@ public class Content implements Serializable {
     private String mRecommendations;
 
     /**
+     * Deep Link Url to the 3rd party app .
+     */
+    private String mDeepLinkUrl;
+
+    /**
+     * PlayMode: DirectPlay, Deeplink.
+     */
+    private PlayMode mPlayMode = PlayMode.DirectPlay;
+
+    /**
      * Locale of the content; the default is English.
      */
     private Locale mLocale = Locale.ENGLISH;
@@ -162,9 +199,24 @@ public class Content implements Serializable {
     public static final String SUBTITLE_FIELD_NAME = "subtitle";
 
     /**
+     * Constant for matching the category field name.
+     */
+    public static final String CATEGORY_FIELD_NAME = "category";
+
+    /**
+     * Constant for matching the review field name.
+     */
+    public static final String REVIEW_FIELD_NAME = "review";
+
+    /**
      * Constant for matching the url field name.
      */
     public static final String URL_FIELD_NAME = "url";
+
+    /**
+     * Constant for matching the deep link url field name.
+     */
+    public static final String DEEP_LINK_URL_FIELD_NAME = "deepLinkUrl";
 
     /**
      * Constant for matching the cardImageUrl field name.
@@ -225,6 +277,21 @@ public class Content implements Serializable {
      * Constant for matching the format field name.
      */
     public static final String FORMAT_FIELD_NAME = "format";
+
+    /**
+     * Constant for matching the broadcaster logo field name.
+     */
+    public static final String BROADCASTER_LOGO_FIELD_NAME = "broadcasterLogo";
+
+    /**
+     * Constant for matching the broadcaster field name.
+     */
+    public static final String BROADCASTER_FIELD_NAME = "broadcaster";
+
+    /**
+     * Constant for matching the image credits field name.
+     */
+    public static final String IMAGE_CREDITS_FIELD_NAME = "imageCredits";
 
     /**
      * Constant for getting adId out of extras.
@@ -295,6 +362,11 @@ public class Content implements Serializable {
     public static final String RECOMMENDATION_ACTIONS_TAG = "recommendationActions";
 
     /**
+     * Constant for getting the entry play mode: DirectPlay, Deeplink.
+     */
+    public static final String PLAY_MODE_FIELD_NAME = "playMode";
+
+    /**
      * Creates a {@link Content} with empty values.
      */
     public Content() {
@@ -302,16 +374,23 @@ public class Content implements Serializable {
         mId = "0";
         mTitle = "";
         mSubtitle = "";
+        mCategory = "";
         mUrl = "";
+        mBroadcasterLogo = "";
+        mBroadcaster = "";
         mDescription = "";
+        mReview = "";
         mBackgroundImageUrl = "";
         mCardImageUrl = "";
+        mImageCredits = "";
         mStudio = "";
         mSubscriptionRequired = false;
         mDuration = 0;
         mAvailableDate = "";
         mTags = "[]";
         mRecommendations = "[]";
+        mDeepLinkUrl = "";
+        mPlayMode = PlayMode.DirectPlay;
     }
 
     /**
@@ -386,6 +465,16 @@ public class Content implements Serializable {
     }
 
     /**
+     * Get content category.
+     *
+     * @return Content category.
+     */
+    public String getCategory() {
+
+        return mCategory;
+    }
+
+    /**
      * Set content subtitle.
      *
      * @param subtitle Content subtitle.
@@ -393,6 +482,16 @@ public class Content implements Serializable {
     public void setSubtitle(String subtitle) {
 
         mSubtitle = subtitle;
+    }
+
+    /**
+     * Set content category.
+     *
+     * @param category Content category.
+     */
+    public void setCategory(String category) {
+
+        mCategory = category;
     }
 
     /**
@@ -406,6 +505,26 @@ public class Content implements Serializable {
     }
 
     /**
+     * Get content broadcaster logo.
+     *
+     * @return Content broadcaster logo.
+     */
+    public String getBroadcasterLogo() {
+
+        return mBroadcasterLogo;
+    }
+
+    /**
+     * Get content broadcaster.
+     *
+     * @return Content broadcaster.
+     */
+    public String getBroadcaster() {
+
+        return mBroadcaster;
+    }
+
+    /**
      * Set content url.
      *
      * @param url Content url.
@@ -413,6 +532,26 @@ public class Content implements Serializable {
     public void setUrl(String url) {
 
         mUrl = url;
+    }
+
+    /**
+     * Set content broadcaster logo.
+     *
+     * @param broadcasterLogo Content broadcaster logo.
+     */
+    public void setBroadcasterLogo(String broadcasterLogo) {
+
+        mBroadcasterLogo = broadcasterLogo;
+    }
+
+    /**
+     * Set content broadcaster.
+     *
+     * @param broadcaster Content broadcaster.
+     */
+    public void setBroadcaster(String broadcaster) {
+
+        mBroadcaster = broadcaster;
     }
 
     /**
@@ -433,6 +572,26 @@ public class Content implements Serializable {
     public void setDescription(String description) {
 
         mDescription = description;
+    }
+
+    /**
+     * Get content review.
+     *
+     * @return Content review.
+     */
+    public String getReview() {
+
+        return mReview;
+    }
+
+    /**
+     * Set content review.
+     *
+     * @param review Content review.
+     */
+    public void setReview(String review) {
+
+        mReview = review;
     }
 
     /**
@@ -466,6 +625,16 @@ public class Content implements Serializable {
     }
 
     /**
+     * Get content image credits.
+     *
+     * @return Content image credits.
+     */
+    public String getImageCredits() {
+
+        return mImageCredits;
+    }
+
+    /**
      * Set content card image url.
      *
      * @param cardImageUrl Content card image url.
@@ -473,6 +642,16 @@ public class Content implements Serializable {
     public void setCardImageUrl(String cardImageUrl) {
 
         mCardImageUrl = cardImageUrl;
+    }
+
+    /**
+     * Set content image credits.
+     *
+     * @param imageCredits Content image credits.
+     */
+    public void setImageCredits(String imageCredits) {
+
+        mImageCredits = imageCredits;
     }
 
     /**
@@ -962,9 +1141,14 @@ public class Content implements Serializable {
                 "mId='" + mId + '\'' +
                 ", mTitle='" + mTitle + '\'' +
                 ", mSubtitle='" + mSubtitle + '\'' +
+                ", mCategory='" + mCategory + '\'' +
                 ", mUrl='" + mUrl + '\'' +
+                ", mBroadcasterLogo='" + mBroadcasterLogo + '\'' +
+                ", mBroadcaster='" + mBroadcaster + '\'' +
                 ", mDescription='" + mDescription + '\'' +
+                ", mReview='" + mReview + '\'' +
                 ", mCardImageUrl='" + mCardImageUrl + '\'' +
+                ", mImageCredits='" + mImageCredits + '\'' +
                 ", mBackgroundImageUrl='" + mBackgroundImageUrl + '\'' +
                 ", mSubscriptionRequired=" + mSubscriptionRequired +
                 ", mStudio='" + mStudio + '\'' +
@@ -1025,4 +1209,19 @@ public class Content implements Serializable {
 
     }
 
+    public String getDeepLinkUrl() {
+        return mDeepLinkUrl;
+    }
+
+    public void setDeepLinkUrl(String deepLinkUrl) {
+        this.mDeepLinkUrl = deepLinkUrl;
+    }
+
+    public PlayMode getPlayMode() {
+        return mPlayMode;
+    }
+
+    public void setPlayMode(PlayMode mPlayMode) {
+        this.mPlayMode = mPlayMode;
+    }
 }

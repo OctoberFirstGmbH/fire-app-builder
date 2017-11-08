@@ -1,0 +1,28 @@
+{
+  "cooker": "DynamicParser",
+  "format": "json",
+  "model": "com.amazon.android.model.content.Content",
+  "translator": "ContentTranslator",
+  "modelType": "array",
+  "query": "$[?(@)]",
+  "matchList": [
+    "title@title",
+    "id@id",
+    "description@description",
+    "url@url",
+    "med_image_url@cardImageUrl",
+    "hi_image_url@backgroundImageUrl",
+    "channel_id@channelId",
+    "tags@tags",
+    "length_min@duration",
+    "category@category",
+    "review@review",
+    "recommendations@recommendations",
+    "date_available@availableDate",
+    "broadcaster_logo@broadcasterLogo",
+    "broadcaster@broadcaster",
+    "copyright@imageCredits",
+    "deep_link_url@deepLinkUrl",
+    "play_mode@playMode"
+  ]
+}

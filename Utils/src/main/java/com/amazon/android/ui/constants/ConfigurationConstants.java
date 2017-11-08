@@ -34,6 +34,9 @@ public class ConfigurationConstants {
      */
     public static final String REGULAR_FONT = "RegularTypeFace";
 
+    public static final String BOLD_ITALIC_FONT = "BoldItalicTypeFace";
+    public static final String BOLD_SMALL_CAPS_FONT = "BoldSmallCapsTypeFace";
+
     /**
      * The color of the spinner
      */
@@ -43,4 +46,6 @@ public class ConfigurationConstants {
      * The alpha of the spinner
      */
     public static final String CONFIG_SPINNER_ALPHA_COLOR = "mSpinnerAlpha";
+
+
 }

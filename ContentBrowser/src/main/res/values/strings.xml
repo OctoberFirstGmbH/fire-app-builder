@@ -56,4 +56,6 @@ permissions and limitations under the License.
     <string name="app_name">ContentBrowser</string>
     <!-- Used in recommendations. Should be no more than 15 characters. -->
     <string name="app_name_short">@string/app_name</string>
+    <string name="broadcasters_title">Mediatheken</string>
+    <string name="philosophie_title">Philosophie</string>
 </resources>

@@ -28,22 +28,9 @@
  */
 package com.amazon.android.tv.tenfoot.ui.fragments;
 
-import com.amazon.android.contentbrowser.ContentBrowser;
-import com.amazon.android.model.Action;
-import com.amazon.android.model.content.Content;
-import com.amazon.android.model.content.ContentContainer;
-import com.amazon.android.utils.GlideHelper;
-import com.amazon.android.utils.Helpers;
-import com.amazon.android.tv.tenfoot.R;
-import com.amazon.android.tv.tenfoot.presenter.CardPresenter;
-import com.amazon.android.tv.tenfoot.presenter.DetailsDescriptionPresenter;
-import com.amazon.android.tv.tenfoot.ui.activities.ContentDetailsActivity;
-import com.amazon.android.tv.tenfoot.utils.LeanbackHelpers;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-
-import android.app.NotificationManager;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -62,13 +49,13 @@ import android.support.v17.leanback.widget.HorizontalGridView;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.RowHeaderPresenter;
-import android.support.v17.leanback.widget.TenFootActionPresenterSelector;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
+import android.support.v17.leanback.widget.RowHeaderPresenter;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
+import android.support.v17.leanback.widget.TenFootActionPresenterSelector;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -78,6 +65,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.amazon.android.contentbrowser.ContentBrowser;
+import com.amazon.android.model.Action;
+import com.amazon.android.model.content.Content;
+import com.amazon.android.model.content.ContentContainer;
+import com.amazon.android.tv.tenfoot.R;
+import com.amazon.android.tv.tenfoot.constants.Broadcasters;
+import com.amazon.android.tv.tenfoot.presenter.CardPresenter;
+import com.amazon.android.tv.tenfoot.presenter.DetailsDescriptionPresenter;
+import com.amazon.android.tv.tenfoot.ui.activities.ContentDetailsActivity;
+import com.amazon.android.tv.tenfoot.utils.LeanbackHelpers;
+import com.amazon.android.utils.GlideHelper;
+import com.amazon.android.utils.Helpers;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.util.List;
 
@@ -90,9 +92,12 @@ import java.util.List;
 public class ContentDetailsFragment extends android.support.v17.leanback.app.DetailsFragment {
 
     private static final String TAG = ContentDetailsFragment.class.getSimpleName();
-
-    private static final int DETAIL_THUMB_WIDTH = 264;
-    private static final int DETAIL_THUMB_HEIGHT = 198;
+    private static final String TV_PROGRAM_VIDEO_URL_DEFAULT = "https://featvre.com/default.mp4";
+    private static final int DETAIL_THUMB_WIDTH = 264; //264;
+    private static final int DETAIL_THUMB_HEIGHT = 198; //198;
+    private static final String VIDEO_UNAVAILABLE_TITLE = "Dieses Video ist leider nicht abspielbar";
+    private static final String VIDEO_UNAVAILABLE_MESSAGE
+            = "Bitte versuchen Sie, den Beitrag über Ihr Smartphone zu finden und abzuspielen.";
 
     private Content mSelectedContent;
 
@@ -214,6 +219,8 @@ public class ContentDetailsFragment extends android.support.v17.leanback.app.Det
                 Bitmap bitmap = Helpers.adjustOpacity(resource, getResources().getInteger(
                         R.integer.content_details_fragment_bg_opacity));
 
+                bitmap = blur(bitmap, BITMAP_SCALE, BLUR_RADIUS);
+
                 mBackgroundManager.setBitmap(bitmap);
             }
         };
@@ -221,6 +228,216 @@ public class ContentDetailsFragment extends android.support.v17.leanback.app.Det
         GlideHelper.loadImageIntoSimpleTargetBitmap(getActivity(), uri,
                                                     new GlideHelper.LoggingListener(),
                                                     android.R.color.transparent, bitmapTarget);
+    }
+
+    private static final float BITMAP_SCALE = 0.8f;
+    private static final int BLUR_RADIUS = 70;
+    public Bitmap blur(Bitmap sentBitmap, float scale, int radius) {
+
+        int width = Math.round(sentBitmap.getWidth() * scale);
+        int height = Math.round(sentBitmap.getHeight() * scale);
+        sentBitmap = Bitmap.createScaledBitmap(sentBitmap, width, height, false);
+
+        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+
+        if (radius < 1) {
+            return (null);
+        }
+
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+
+        int[] pix = new int[w * h];
+        Log.e("pix", w + " " + h + " " + pix.length);
+        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+
+        int wm = w - 1;
+        int hm = h - 1;
+        int wh = w * h;
+        int div = radius + radius + 1;
+
+        int r[] = new int[wh];
+        int g[] = new int[wh];
+        int b[] = new int[wh];
+        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
+        int vmin[] = new int[Math.max(w, h)];
+
+        int divsum = (div + 1) >> 1;
+        divsum *= divsum;
+        int dv[] = new int[256 * divsum];
+        for (i = 0; i < 256 * divsum; i++) {
+            dv[i] = (i / divsum);
+        }
+
+        yw = yi = 0;
+
+        int[][] stack = new int[div][3];
+        int stackpointer;
+        int stackstart;
+        int[] sir;
+        int rbs;
+        int r1 = radius + 1;
+        int routsum, goutsum, boutsum;
+        int rinsum, ginsum, binsum;
+
+        for (y = 0; y < h; y++) {
+            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            for (i = -radius; i <= radius; i++) {
+                p = pix[yi + Math.min(wm, Math.max(i, 0))];
+                sir = stack[i + radius];
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+                rbs = r1 - Math.abs(i);
+                rsum += sir[0] * rbs;
+                gsum += sir[1] * rbs;
+                bsum += sir[2] * rbs;
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
+            }
+            stackpointer = radius;
+
+            for (x = 0; x < w; x++) {
+
+                r[yi] = dv[rsum];
+                g[yi] = dv[gsum];
+                b[yi] = dv[bsum];
+
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+
+                if (y == 0) {
+                    vmin[x] = Math.min(x + radius + 1, wm);
+                }
+                p = pix[yw + vmin[x]];
+
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[(stackpointer) % div];
+
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+
+                yi++;
+            }
+            yw += w;
+        }
+        for (x = 0; x < w; x++) {
+            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            yp = -radius * w;
+            for (i = -radius; i <= radius; i++) {
+                yi = Math.max(0, yp) + x;
+
+                sir = stack[i + radius];
+
+                sir[0] = r[yi];
+                sir[1] = g[yi];
+                sir[2] = b[yi];
+
+                rbs = r1 - Math.abs(i);
+
+                rsum += r[yi] * rbs;
+                gsum += g[yi] * rbs;
+                bsum += b[yi] * rbs;
+
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
+
+                if (i < hm) {
+                    yp += w;
+                }
+            }
+            yi = x;
+            stackpointer = radius;
+            for (y = 0; y < h; y++) {
+                // Preserve alpha channel: ( 0xff000000 & pix[yi] )
+                pix[yi] = ( 0xff000000 & pix[yi] ) | ( dv[rsum] << 16 ) | ( dv[gsum] << 8 ) | dv[bsum];
+
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+
+                if (x == 0) {
+                    vmin[y] = Math.min(y + r1, hm) * w;
+                }
+                p = x + vmin[y];
+
+                sir[0] = r[p];
+                sir[1] = g[p];
+                sir[2] = b[p];
+
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[stackpointer];
+
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+
+                yi += w;
+            }
+        }
+
+        Log.e("pix", w + " " + h + " " + pix.length);
+        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
+
+        return (bitmap);
     }
 
     private void setupAdapter() {
@@ -306,10 +523,33 @@ public class ContentDetailsFragment extends android.support.v17.leanback.app.Det
                             vh.view.findViewById(R.id.details_overview_image)
                                    .setTransitionName(ContentDetailsActivity.SHARED_ELEMENT_NAME);
                         }
+
+                        //R.layout.lb_details_overview
+                        //R.id.lb_details_description_title
+
+                        View details = vh.view.findViewById(R.id.details_frame);
+                        //details.setBackgroundColor(Color.parseColor("#FF0000"));
+                        ViewGroup.LayoutParams layoutParams2 = details.getLayoutParams();
+                        layoutParams2.height = 1000;
+                        //details.setLayoutParams(layoutParams2);
+
+                        View detailsRightPanel = vh.view.findViewById(R.id.details_overview_description);
+                        //detailsRightPanel.setBackgroundColor(Color.parseColor("#FFFF00"));
+                        ViewGroup.LayoutParams layoutParams1 = detailsRightPanel.getLayoutParams();
+                        //layoutParams1.height = 1100;
+                        //detailsRightPanel.setLayoutParams(layoutParams1);
+
+                        View detailsActions = vh.view.findViewById(R.id.details_overview_actions);
+                        //detailsActions.setBackgroundColor(Color.parseColor("#0000FF"));
+                        ViewGroup.LayoutParams layoutParams3 = detailsActions.getLayoutParams();
+                        //layoutParams3.height = 300;
+                        //detailsActions.setLayoutParams(layoutParams3);
+
                     }
                 };
         detailsPresenter.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         detailsPresenter.setStyleLarge(true);
+
 
         // Hook up transition element.
         detailsPresenter.setSharedElementEnterTransition(getActivity(),
@@ -326,8 +566,71 @@ public class ContentDetailsFragment extends android.support.v17.leanback.app.Det
                 int actionId = (int) action.getId();
                 Log.v(TAG, "detailsPresenter.setOnActionClicked:" + actionId);
 
-                ContentBrowser.getInstance(getActivity())
-                              .actionTriggered(getActivity(), mSelectedContent, actionId);
+                switch (mSelectedContent.getPlayMode()) {
+                    case DirectPlay:
+                        // have the real video url, play it
+                        if(!mSelectedContent.getUrl().equals(TV_PROGRAM_VIDEO_URL_DEFAULT)) {
+                            ContentBrowser.getInstance(getActivity())
+                                    .actionTriggered(getActivity(), mSelectedContent, actionId);
+                        } // have the deep link
+                        else if (mSelectedContent.getDeepLinkUrl() != null && !mSelectedContent.getDeepLinkUrl().isEmpty()) {
+                            boolean hasDeepLinkWorked = tryDeepLink(mSelectedContent.getBroadcaster());
+                            if(!hasDeepLinkWorked) {
+                                showDialog(VIDEO_UNAVAILABLE_TITLE, VIDEO_UNAVAILABLE_MESSAGE, "OK", null);
+                            }
+                        } // default: unavailable message
+                        else {
+                            actionInProgress = false;
+                            showDialog(VIDEO_UNAVAILABLE_TITLE, VIDEO_UNAVAILABLE_MESSAGE, "OK", null);
+                        }
+                        break;
+                    case Deeplink:
+                        // have the deep link
+                        if (mSelectedContent.getDeepLinkUrl() != null && !mSelectedContent.getDeepLinkUrl().isEmpty()) {
+                            boolean hasDeepLinkWorked = tryDeepLink(mSelectedContent.getBroadcaster());
+                            if(!hasDeepLinkWorked) {
+                                showDialog(VIDEO_UNAVAILABLE_TITLE, VIDEO_UNAVAILABLE_MESSAGE, "OK", null);
+                            }
+                        } // default: unavailable message
+                        else {
+                            actionInProgress = false;
+                            showDialog(VIDEO_UNAVAILABLE_TITLE, VIDEO_UNAVAILABLE_MESSAGE, "OK", null);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                /*
+                // if we have the deep link
+                if(mSelectedContent.getDeepLinkUrl() != null && !mSelectedContent.getDeepLinkUrl().isEmpty()) {
+
+                    boolean hasDeepLinkWorked = tryDeepLink(mSelectedContent.getBroadcaster());
+
+                    // todo: get the information from the server if broadcaster can be played in case of deep link fail
+                    boolean canPlayDirectly = true;
+                    if(!hasDeepLinkWorked) {
+                        if(canPlayDirectly) {
+                            ContentBrowser.getInstance(getActivity())
+                                    .actionTriggered(getActivity(), mSelectedContent, actionId);
+                        } else {
+                            showDialog("Dieses Video ist leider nicht abspielbar",
+                                    "Bitte versuchen Sie, den Beitrag über Ihr Smartphone zu finden und abzuspielen.",
+                                    "OK", null);
+                        }
+                    }
+                } // if we have the default video url
+                else if(mSelectedContent.getUrl().equals(TV_PROGRAM_VIDEO_URL_DEFAULT)) {
+                    actionInProgress = false;
+                    showDialog("Dieses Video ist leider nicht abspielbar",
+                            "Bitte versuchen Sie, den Beitrag über Ihr Smartphone zu finden und abzuspielen.",
+                            "OK", null);
+                } // just play video url
+                else {
+                    ContentBrowser.getInstance(getActivity())
+                            .actionTriggered(getActivity(), mSelectedContent, actionId);
+                }
+                */
             }
             catch (Exception e) {
                 Log.e(TAG, "caught exception while clicking action", e);
@@ -335,6 +638,20 @@ public class ContentDetailsFragment extends android.support.v17.leanback.app.Det
             }
         });
         mPresenterSelector.addClassPresenter(DetailsOverviewRow.class, detailsPresenter);
+    }
+
+    private boolean tryDeepLink(final String broadcaster) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mSelectedContent.getDeepLinkUrl()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setComponent(new ComponentName(Broadcasters.getPackageName(broadcaster),
+                    Broadcasters.getClassName(broadcaster)));
+            startActivity(intent);
+            return true;
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -384,6 +701,41 @@ public class ContentDetailsFragment extends android.support.v17.leanback.app.Det
                               .setLastSelectedContent(content)
                               .switchToScreen(ContentBrowser.CONTENT_DETAILS_SCREEN, bundle);
             }
+        }
+    }
+
+    private void showDialog(String title, String message, String positiveButtonText, String negativeButtonText) {
+
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(title)
+                    .setMessage(message);
+            if(positiveButtonText != null && !positiveButtonText.isEmpty()){
+                builder.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //if (dialogFragmentListener != null) {
+                        //  dialogFragmentListener.onDialogFragmentConfirm();
+                        //}
+                    }
+                });
+            }
+            if(negativeButtonText != null && !negativeButtonText.isEmpty()){
+                builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //if (dialogFragmentListener != null) {
+                        //  dialogFragmentListener.onDialogFragmentCancel();
+                        //}
+                    }
+                });
+            }
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            alertDialog.show();
+
+        } catch (Throwable t){
+            t.printStackTrace();
         }
     }
 

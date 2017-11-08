@@ -15,7 +15,14 @@
 
 package com.amazon.android.contentbrowser.helper;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import com.amazon.ads.AdMetaData;
+import com.amazon.analytics.AnalyticsActionBuilder;
+import com.amazon.analytics.AnalyticsManager;
+import com.amazon.analytics.AnalyticsTags;
 import com.amazon.analytics.ExtraContentAttributes;
 import com.amazon.analytics.IAnalytics;
 import com.amazon.android.contentbrowser.ContentBrowser;
@@ -23,16 +30,8 @@ import com.amazon.android.contentbrowser.R;
 import com.amazon.android.contentbrowser.app.ContentBrowserApplication;
 import com.amazon.android.model.content.Content;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import com.amazon.analytics.AnalyticsActionBuilder;
-import com.amazon.analytics.AnalyticsTags;
-import com.amazon.analytics.AnalyticsManager;
 
 /**
  * Analytics helper class.
@@ -615,7 +614,6 @@ public class AnalyticsHelper {
         else if (actionId == ContentBrowser.CONTENT_ACTION_RESUME) {
             sb.append(context.getString(R.string.resume_1))
               .append(context.getString(R.string.resume_2));
-
         }
         else if (actionId == ContentBrowser.CONTENT_ACTION_DAILY_PASS) {
             sb.append(context.getString(R.string.daily_pass_1))

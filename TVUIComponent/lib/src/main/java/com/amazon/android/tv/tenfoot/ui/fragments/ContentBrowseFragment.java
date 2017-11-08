@@ -28,19 +28,6 @@
  */
 package com.amazon.android.tv.tenfoot.ui.fragments;
 
-import com.amazon.android.contentbrowser.ContentBrowser;
-import com.amazon.android.contentbrowser.helper.AuthHelper;
-import com.amazon.android.model.Action;
-import com.amazon.android.model.content.Content;
-import com.amazon.android.model.content.ContentContainer;
-import com.amazon.android.tv.tenfoot.R;
-import com.amazon.android.tv.tenfoot.presenter.CardPresenter;
-import com.amazon.android.tv.tenfoot.presenter.CustomListRowPresenter;
-import com.amazon.android.tv.tenfoot.presenter.SettingsCardPresenter;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -56,6 +43,19 @@ import android.support.v17.leanback.widget.RowHeaderPresenter;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridView;
 import android.util.Log;
+
+import com.amazon.android.contentbrowser.ContentBrowser;
+import com.amazon.android.contentbrowser.helper.AuthHelper;
+import com.amazon.android.model.Action;
+import com.amazon.android.model.content.Content;
+import com.amazon.android.model.content.ContentContainer;
+import com.amazon.android.tv.tenfoot.R;
+import com.amazon.android.tv.tenfoot.presenter.CardPresenter;
+import com.amazon.android.tv.tenfoot.presenter.CustomListRowPresenter;
+import com.amazon.android.tv.tenfoot.presenter.SettingsCardPresenter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -93,7 +93,8 @@ public class ContentBrowseFragment extends RowsFragment {
         }
 
         CustomListRowPresenter customListRowPresenter = new CustomListRowPresenter();
-        customListRowPresenter.setHeaderPresenter(new RowHeaderPresenter());
+        RowHeaderPresenter rowHeaderPresenter = new RowHeaderPresenter();
+        customListRowPresenter.setHeaderPresenter(rowHeaderPresenter);
 
         // Uncomment this code to remove shadow from the cards
         //customListRowPresenter.setShadowEnabled(false);
